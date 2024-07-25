@@ -1,7 +1,9 @@
-import { Component } from '@angular/core';
+ import { Component } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { CustomerToastrService, ToastrMessageType, ToastrPosition } from './services/ui/customer-toastr.service';
 import { MessageType } from './services/admin/alertify.service';
+import { AuthService } from './services/common/auth.service';
+import { Router } from '@angular/router';
 declare var $:any
 
 @Component({
@@ -10,7 +12,19 @@ declare var $:any
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'ETicaretClient';
+  constructor(public authService: AuthService, private toastrService: CustomerToastrService, private router: Router) {
+    authService.identityCheck();
+  }
+
+  signOut() {
+    localStorage.removeItem("accessToken")
+    this.authService.identityCheck();
+    this.router.navigate([""]);
+    this.toastrService.message("Oturum Kapatılmıştır!", "Oturum Kapatıldı.", {
+      messageType: ToastrMessageType.Warning,
+      position: ToastrPosition.TopRight
+    })
+  }
 
 
 }

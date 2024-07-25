@@ -1,0 +1,41 @@
+<div class="row">
+  <div class="col-md-3">
+
+  </div>
+  <div class="col-md-6">
+    <form [formGroup]="frm" (ngSubmit)="onSubmit(frm.value)">
+      <div class="mb-3">
+        <label for="nameSurname" class="form-label">Ad Soyad</label>
+        <input type="text" formControlName="nameSurname" class="form-control" id="nameSurname" placeholder="Ad Soyad" [ngClass]="{'is-invalid':submitted&&component.nameSurname.errors}">
+        <div id="emailHelp" class="form-text text-muted" *ngIf="submitted && component.nameSurname.errors?.required ">Lütfen Ad soyadı boş geçmeyiniz .</div>
+        <div id="emailHelp" class="form-text text-muted" *ngIf="submitted && component.nameSurname.errors?.maxlength ">Lütfen max karakter sayısını aşmayınız.</div>
+        <div id="emailHelp" class="form-text text-muted" *ngIf="submitted && component.nameSurname.errors?.minlength ">Lütfen min karakter sayısına dikkat ediniz.</div>
+      </div>
+      <div class="mb-3">
+        <label for="kullaniciAdi" class="form-label">Kullancı Adi</label>
+        <input type="text" formControlName="username" class="form-control" id="kullaniciAdi" placeholder="Kullanıcı adı" [ngClass]="{'is-invalid':submitted&&component.username.errors}">
+        <div id="emailHelp" class="form-text text-muted" *ngIf="submitted && component.username.errors?.required ">Lütfen Kullanıcı Adi boş geçmeyiniz .</div>
+      </div>
+      <div class="mb-3">
+        <label for="Email">Email </label>
+        <input type="email" formControlName="email" class="form-control" id="Email" placeholder="Email"  [ngClass]="{'is-invalid':submitted&&component.email.errors}">
+        <div id="emailHelp" class="form-text text-muted" *ngIf="submitted && component.email.errors?.required ">Lütfen email boş geçmeyiniz .</div>
+        <div id="emailHelp" class="form-text text-muted" *ngIf="submitted && component.email.errors?.email ">Lütfen email adresinizi kontrol ediniz.</div>
+      </div>
+      <div class="mb-3">
+        <label for="password" class="form-label">Şifre</label>
+        <input type="password" formControlName="password" class="form-control" id="password" placeholder="Şifre" [ngClass]="{'is-invalid':submitted&&component.password.errors}">
+      </div>
+      <div class="mb-3">
+        <label for="password" class="form-label">Şifre Tekrar</label>
+        <input type="password" formControlName="passwordConfirm" class="form-control" id="password" placeholder="Şifre Tekrar" [ngClass]="{'is-invalid':submitted&&component.passwordConfirm.errors}">
+        <div id="emailHelp" class="form-text text-muted" *ngIf="submitted && frm.hasError('notSame') ">Şifreler Eşleşmemektedir</div>
+      </div>
+      <br />
+     
+      <button type="submit" class="btn btn-primary">Kayıt ol</button>
+    </form>
+
+  </div>
+
+</div>

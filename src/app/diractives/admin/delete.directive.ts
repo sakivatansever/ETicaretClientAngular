@@ -8,6 +8,7 @@ import { DeleteDialogComponent, DeleteState } from '../../dialogs/delete-dialog/
 import { AlertifyService, MessageType, Position } from '../../services/admin/alertify.service';
 import { HttpclientService } from '../../services/common/httpclient.service';
 import { ProductService } from '../../services/common/models/product.service';
+import { DialogService } from '../../services/common/dialog.service';
 
 
 declare var $: any;
@@ -17,7 +18,7 @@ declare var $: any;
 })
 export class DeleteDirective {
 
-  constructor(private element: ElementRef, private _renderer: Renderer2, private httpClientService: HttpclientService, private spinner: NgxSpinnerService, public dialog: MatDialog, private alertfyService: AlertifyService) {
+  constructor(private element: ElementRef, private _renderer: Renderer2, private httpClientService: HttpclientService, private spinner: NgxSpinnerService, public dialog: MatDialog, private alertfyService: AlertifyService, private dialogService: DialogService) {
 
     const img = _renderer.createElement("img");
     img.setAttribute("src", "../../../../../assets/delete.png")
@@ -37,33 +38,38 @@ export class DeleteDirective {
 
  
   async onclick() {
-    this.openDialog(async () => {
-      this.spinner.show(SpinnerType.BallAtom)
-    const td: HTMLTableCellElement = this.element.nativeElement;
+    this.dialogService.openDialog({
+      componentType: DeleteDialogComponent,
+      data: DeleteState.Yes,
+      afterClosed: async () => {
+        this.spinner.show(SpinnerType.BallAtom)
+        const td: HTMLTableCellElement = this.element.nativeElement;
 
-      this.httpClientService.delete({
-        controller: this.controller
-      }, this.id).subscribe(data => {
-      $(td.parentElement).animate({
-        opacity: 0,
-        left: "+=50",
-        height: "toogle"
-      }, 700, () => {
-        this.callback.emit()
-        this.alertfyService.message("Ürün başarılı bir şekilde silindi", {
-          dismissOther: true,
-          messageType: MessageType.Success,
-          position: Position.TopRight
+        this.httpClientService.delete({
+          controller: this.controller
+        }, this.id).subscribe(data => {
+          $(td.parentElement).animate({
+            opacity: 0,
+            left: "+=50",
+            height: "toogle"
+          }, 700, () => {
+            this.callback.emit()
+            this.alertfyService.message("Ürün başarılı bir şekilde silindi", {
+              dismissOther: true,
+              messageType: MessageType.Success,
+              position: Position.TopRight
+            })
+          })
+
+        }, (errorResponse: HttpErrorResponse) => {
+          this.spinner.hide(SpinnerType.BallAtom);
+          this.alertfyService.message("Ürün silme işleminde bir hata meydana geldi .", {
+            messageType: MessageType.Error, position: Position.TopRight
+          })
+
         })
-      })
-        
-      }, (errorResponse: HttpErrorResponse) => {
-        this.spinner.hide(SpinnerType.BallAtom);
-      this.alertfyService.message("Ürün silme işleminde bir hata meydana geldi .", {
-        messageType: MessageType.Error, position: Position.TopRight
-      })
- 
-      })
+      }
+
     })
 
   }
